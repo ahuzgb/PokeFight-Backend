@@ -1,12 +1,20 @@
 const express = require("express");
-
-const pokeData = require("./pokedex.json");
-
+require("dotenv").config();
+const connectDB = require("./dbinit");
 const cors = require("cors");
 
 const app = express();
 
+connectDB();
+
 const PORT = process.env.PORT || 8080;
+
+const pokeData = require("./pokedex.json");
+
+const games = require("./routes/gameRoutes");
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
@@ -30,6 +38,8 @@ app.get("/pokemon/:id/:info", (req, res) => {
 
   res.send(pokemon[info]);
 });
+
+app.use("/game", games);
 
 app.listen(PORT, () => {
   `You are the listener, you are on port ${PORT}`;
